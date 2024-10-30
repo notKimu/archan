@@ -1,0 +1,6 @@
+bot/node_modules
+bot/dist
+bot/pnpm-lock.yaml
+.vscode
+*.env*
+redis/redis.conf
