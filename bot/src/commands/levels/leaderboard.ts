@@ -6,7 +6,7 @@ import { SlashCommand } from "../../types";
 import {
   getLeaderboard,
   getUserRanking,
-} from "../../utils/db/functions";
+} from "../../db/functions";
 import { getGuildIcon, guildFooter } from "../../utils/defaults/guild";
 import { cooldowns } from "../../utils/defaults";
 
@@ -20,7 +20,7 @@ const command: SlashCommand = {
     const { guild, member } = interaction;
 
     const leaderboard = await getLeaderboard(guild.id, 11);
-    const userRanking = await getUserRanking(guild.id, member.id);
+    const userRanking = await getUserRanking(guild.id, member.user.id);
 
     const rankingEmbed = new EmbedBuilder()
       .setTitle(`${guild.name}'s Ranking`)

@@ -1,6 +1,6 @@
 import { PermissionFlagsBits, Role, SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../../types";
-import { getGuildData, saveGuildData } from "../../utils/db/functions";
+import { getGuildData, saveGuildData } from "../../db/functions";
 import { cooldowns } from "../../utils/defaults";
 
 const command: SlashCommand = {
@@ -38,8 +38,8 @@ const command: SlashCommand = {
         .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
     execute: async (interaction) => {
         const { guild, options } = interaction;
-        const level: number = options.getInteger("level");
-        const role: Role = interaction.options.getRole("role");
+        const level: number = options.getInteger("level")!;
+        const role: Role = interaction.options.getRole("role")! as Role;
         if (level === null || !role)
             return interaction.reply({
                 content:

@@ -9,7 +9,7 @@ import {
   getGuildData,
   getUserData,
   saveUserData,
-} from "../../utils/db/functions";
+} from "../../db/functions";
 import { cooldowns } from "../../utils/defaults";
 
 const command: SlashCommand = {
@@ -47,10 +47,10 @@ const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
   execute: async (interaction) => {
     const { guild, options } = interaction;
-    const targetLevel: number = options.getInteger("level");
-    const affectsRoles: boolean = options.getBoolean("affects-roles");
-    const targetUser: User = options.getUser("member");
-    const targetMember: GuildMember = guild.members.cache.get(targetUser.id);
+    const targetLevel: number = options.getInteger("level")!;
+    const affectsRoles: boolean = options.getBoolean("affects-roles")!;
+    const targetUser: User = options.getUser("member")!;
+    const targetMember: GuildMember = guild.members.cache.get(targetUser.id)!;
     if (targetLevel === null || affectsRoles === null || !targetMember) return interaction.reply({ content: "Wohoho, I didn't receive enough parameters to run this command!", ephemeral: true });
 
     if (!targetMember)

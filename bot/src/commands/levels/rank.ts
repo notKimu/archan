@@ -5,14 +5,17 @@ import {
     User,
 } from "discord.js";
 import { SlashCommand } from "../../types";
-import { createCanvas, loadImage, registerFont } from "canvas";
+import { stat } from "fs/promises";
+import { createCanvas, loadImage } from "canvas";
+import { join } from "path";
 import {
     getGuildData,
     getUserData,
     getXpNeeded,
-} from "../../utils/db/functions";
+} from "../../db/functions";
 import { trimmer } from "../../utils/defaults/strings";
-import { cooldowns, invertHex } from "../../utils/defaults";
+import { cooldowns } from "../../utils/defaults";
+import paths from "../../utils/paths";
 
 const canvasHeight = 200;
 const canvasWidth = 700;
@@ -20,7 +23,10 @@ const canvasWidth = 700;
 const levelBarWidth = 483;
 const levelBarHeight = 43;
 
-registerFont("./assets/fonts/Koulen-Regular.ttf", { family: "koulen" });
+// Depending on the system the registerFont function won't do anything
+// so I ended up installing the font on the system and using it that way
+//
+// registerFont(join(paths.ASSETS_FONTS, "Koulen.ttf"), { family: "Koulen", style: "Regular" });
 
 const command: SlashCommand = {
     command: new SlashCommandBuilder()
@@ -43,13 +49,15 @@ const command: SlashCommand = {
     execute: async (interaction) => {
         const { guild, options, user } = interaction;
         const rankUser: User = options.getUser("member") || user;
-        const rankMember: GuildMember = guild.members.cache.get(rankUser.id);
+        const rankMember: GuildMember = guild.members.cache.get(rankUser.id)!;
 
         if (!rankMember)
             return interaction.reply({
                 content: "That doesn't look like a valid member to me...",
                 ephemeral: true,
             });
+
+        await interaction.deferReply();
 
         const userData = await getUserData(guild.id, rankMember.id);
         const { baseXP, difficulty } = await getGuildData(guild.id);
@@ -61,10 +69,13 @@ const command: SlashCommand = {
         const canvas = createCanvas(canvasWidth, canvasHeight);
         const ctx = canvas.getContext("2d");
 
+        ctx.lineWidth = 3;
+
         // Load background image
-        const defaultImage = "./assets/img/rankDefault.jpg";
+        const defaultImage = join(paths.ASSETS_IMAGES, "rankDefault.jpg");
         await loadImage(
-            userData.rankURL ? userData.rankURL : defaultImage
+            
+            userData.rankURL && await stat(userData.rankURL).catch((e) => false) ? userData.rankURL : defaultImage
         ).then((image) => {
             ctx.drawImage(image, 0, 0, canvasWidth, canvasHeight);
         });
@@ -85,11 +96,16 @@ const command: SlashCommand = {
             ctx.drawImage(image, 18, 19, 163, 163);
         });
 
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "42px koulen";
+        // Frame in the color of the top role around the avatar
+        ctx.strokeStyle = rankMember.displayHexColor;
+        ctx.strokeRect(18, 19, 163, 163);
 
+        
         // Render name
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "42px Koulen";
         ctx.fillText(rankMember.displayName, 199, 182);
+        
         // Level numbers
         ctx.fillText(level.toString(), 199, 105);
 
@@ -97,7 +113,7 @@ const command: SlashCommand = {
 
         ctx.fillText((level + 1).toString(), 682, 105);
 
-        ctx.font = "24px koulen";
+        ctx.font = "24px Koulen";
 
         // XP
         ctx.fillText(trimmer(xp.toString()), 676, 50);
@@ -122,7 +138,8 @@ const command: SlashCommand = {
         const image = new AttachmentBuilder(canvas.toBuffer("image/png"), {
             name: `${rankMember.displayName}_Rank.png`,
         });
-        interaction.reply({ files: [image] });
+
+        await interaction.editReply({ files: [image] });
     },
 
     cooldown: cooldowns.levelsHeavy,

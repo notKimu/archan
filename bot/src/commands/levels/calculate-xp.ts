@@ -4,7 +4,7 @@ import {
     getGuildData,
     getUserData,
     getXpNeeded,
-} from "../../utils/db/functions";
+} from "../../db/functions";
 import { guildFooter } from "../../utils/defaults/guild";
 import { cooldowns } from "../../utils/defaults";
 
@@ -30,7 +30,7 @@ const command: SlashCommand = {
         ),
     execute: async (interaction) => {
         const { guild, member, options, user } = interaction;
-        const targetLevel: number = options.getInteger("level");
+        const targetLevel: number = options.getInteger("level")!;
         if (targetLevel === null)
             return interaction.reply({
                 content:

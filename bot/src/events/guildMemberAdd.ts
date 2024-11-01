@@ -1,4 +1,4 @@
-import { AttachmentBuilder, Events, Guild, GuildMember } from "discord.js";
+import { AttachmentBuilder, Events, GuildMember } from "discord.js";
 import { BotEvent } from "../types";
 import { createCanvas, loadImage, registerFont } from "canvas";
 import { getRandom } from "../utils/defaults";

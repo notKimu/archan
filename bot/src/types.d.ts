@@ -1,8 +1,17 @@
-import { SlashCommandBuilder, CommandInteraction, Collection, PermissionResolvable, Message, AutocompleteInteraction } from "discord.js"
+import { SlashCommandBuilder, CommandInteraction, Collection, PermissionResolvable, Message, AutocompleteInteraction, ChatInputCommandInteraction } from "discord.js"
+
+declare global {
+    var __basedir: string;
+}
+
+type GuildedInteraction = ChatInputCommandInteraction<CacheType> & {
+    guild: NonNullable<ChatInputCommandInteraction<CacheType>['guild']>;
+    member: NonNullable<ChatInputCommandInteraction<CacheType>['member']>;
+};
 
 export interface SlashCommand {
     command: SlashCommandBuilder | any,
-    execute: (interaction : ChatInputCommandInteraction) => void,
+    execute: (interaction : GuildedInteraction) => void,
     autocomplete?: (interaction: AutocompleteInteraction) => void,
     cooldown?: number // in seconds
 }

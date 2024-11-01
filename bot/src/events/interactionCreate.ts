@@ -1,6 +1,10 @@
-import { ChatInputCommandInteraction, Events, Interaction } from "discord.js";
-import { BotEvent } from "../types";
+import { CacheType, ChatInputCommandInteraction, Events, Interaction } from "discord.js";
+import { BotEvent, GuildedInteraction } from "../types";
 import { logError } from "../utils/console";
+
+function isGuildedInteraction(interaction: ChatInputCommandInteraction<CacheType>): interaction is GuildedInteraction {
+    return !!interaction.guild && !!interaction.member;
+}
 
 const event: BotEvent = {
     name: Events.InteractionCreate,
@@ -9,10 +13,10 @@ const event: BotEvent = {
         if (interaction.isChatInputCommand()) {
             const chatInputInteraction =
                 interaction as ChatInputCommandInteraction;
-            if (!chatInputInteraction.guild)
+            if (!isGuildedInteraction(interaction))
                 return interaction.reply(
-                    "Hey! I can only accept commands in a server... for now at least."
-                );
+                "Hey! I can only accept commands in a server... for now at least."
+            );
 
             let command = chatInputInteraction.client.slashCommands.get(
                 chatInputInteraction.commandName
@@ -22,9 +26,11 @@ const event: BotEvent = {
             );
             if (!command) return;
             if (
+                // Disable cooldown for the owner of the bot
                 command.cooldown &&
                 cooldown &&
-                chatInputInteraction.member?.user.id !== "504655450655162379"
+                process.env.OWNER_ID &&
+                chatInputInteraction.member?.user.id !== process.env.OWNER_ID
             ) {
                 if (Date.now() < cooldown) {
                     return chatInputInteraction.reply({
@@ -51,7 +57,7 @@ const event: BotEvent = {
             }
 
             try {
-                command.execute(chatInputInteraction);
+                command.execute(chatInputInteraction as GuildedInteraction);
             } catch (err) {
                 interaction.reply({
                     content: `Critical error >>>\nI had an error executing /${interaction.commandName}, pwease try again later '^^`,

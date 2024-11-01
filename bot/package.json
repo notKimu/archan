@@ -1,11 +1,11 @@
 {
-  "name": "kirna",
+  "name": "archan",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
     "build": "rm -rf dist && tsc",
-    "start": "node ./dist/index.js",
+    "start": "node --env-file=.env ./dist/index.js",
     "dev": "npm run build && npm run start"
   },
   "keywords": [],

@@ -1,7 +1,7 @@
 import { Client, Events } from "discord.js";
 import { BotEvent } from "../types";
 import { logError, logSuccex } from "../utils/console";
-import redisClient from "../utils/db/redis";
+import redisClient from "../db/redis";
 
 const event: BotEvent = {
     name: Events.ClientReady,
@@ -24,7 +24,7 @@ const event: BotEvent = {
             return;
         });
 
-        client.user?.setActivity("Kirna v001");
+        client.user?.setActivity("yay -Syuu");
         logSuccex(client.user?.username + " logged in.");
     },
 };

@@ -4,7 +4,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { SlashCommand } from "../../types";
-import { getGuildData } from "../../utils/db/functions";
+import { getGuildData } from "../../db/functions";
 import { getGuildIcon, guildFooter } from "../../utils/defaults/guild";
 import { cooldowns } from "../../utils/defaults";
 

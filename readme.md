@@ -5,6 +5,8 @@
 
 ## Env
 
+The `.env` file is located inside the `bot` directory
+
 ```env
 TOKEN="<DISCORD_TOKEN>"
 CLIENT_ID="<DISCORD_CLIENT_ID>"

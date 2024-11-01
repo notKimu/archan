@@ -6,17 +6,7 @@ services:
     container_name: redis
     restart: always
     command: redis-server --save 60 1 --loglevel warning --requirepass '<REDIS_PASSWORD>'
-    networks:
-      - internal
-
-  archan:
-    build: ./bot
-    container_name: archan
-    env_file: .env
-    environment:
-      TERM: alacritty
-    networks:
-      - internal
-
-networks:
-  internal:
+    ports:
+      - 6379:6379
+    expose:
+      - 6379

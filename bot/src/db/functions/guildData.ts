@@ -1,5 +1,5 @@
 import redis from "../redis";
-import { logError } from "../../console";
+import { logError } from "../../utils/console";
 
 interface guildStructure {
   baseXP: number;

@@ -1,6 +1,6 @@
-import { Channel, ChannelType, PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
+import { Channel, ChannelType, PermissionFlagsBits, SlashCommandBuilder, TextChannel } from "discord.js";
 import { SlashCommand } from "../../types";
-import { getGuildData, saveGuildData } from "../../utils/db/functions";
+import { getGuildData, saveGuildData } from "../../db/functions";
 import { cooldowns } from "../../utils/defaults";
 
 const command: SlashCommand = {
@@ -21,7 +21,7 @@ const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
   execute: async (interaction) => {
     const { guild, options } = interaction;
-    const channel: Channel = options.getChannel("channel");
+    const channel: TextChannel = options.getChannel("channel")!;
     if (!channel) return interaction.reply({ content: "Wohoho, I didn't receive enough parameters to run this command!", ephemeral: true });
 
     const guildData = await getGuildData(guild.id);

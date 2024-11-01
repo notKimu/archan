@@ -2,8 +2,7 @@ import https from "https";
 import { join, resolve } from "path";
 import { createWriteStream, existsSync, unlink } from "fs";
 import { rm, mkdir } from "fs/promises";
-
-const DOWNLOAD_PATH = "/home/node/app/users/images";
+import paths from "../../utils/paths";
 
 type ImageCategory = "ranks" | "profiles";
 
@@ -17,8 +16,9 @@ export async function downloadImage(data: {
     guild_id: string;
     category: ImageCategory;
 }) {
-    const destinationFolder = join(DOWNLOAD_PATH, data.category);
+    const destinationFolder = join(paths.EXTERNAL_CONTENT, data.category);
     await mkdir(destinationFolder, { recursive: true });
+    
     const fileName = `${data.category}_${data.guild_id}_${data.user_id}`;
     const destinationFile = resolve(destinationFolder, fileName);
     if (existsSync(destinationFile)) await rm(destinationFile);

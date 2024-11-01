@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../../types";
-import { getUserData, saveUserData } from "../../utils/db/functions";
+import { getUserData, saveUserData } from "../../db/functions";
 import { cooldowns } from "../../utils/defaults";
 import { downloadImage } from "../../utils/downloads";
 
@@ -24,7 +24,7 @@ const command: SlashCommand = {
                 .setDescriptionLocalizations({"es-ES": "A ver esa imagen c:"})
                 .setRequired(true)
         ),
-    execute: async (interaction: ChatInputCommandInteraction) => {
+    execute: async (interaction) => {
         const { guild, options, user } = interaction;
         const image = options.getAttachment("image");
         if (!image)
@@ -69,13 +69,13 @@ const command: SlashCommand = {
             const imagePath = await downloadImage({
                 url: image.url,
                 user_id: user.id,
-                guild_id: guild!.id,
+                guild_id: guild.id,
                 category: "ranks",
             });
 
-            const userData = await getUserData(guild!.id, user.id);
+            const userData = await getUserData(guild.id, user.id);
             userData.rankURL = imagePath;
-            await saveUserData(guild!.id, user.id, { ...userData });
+            await saveUserData(guild.id, user.id, { ...userData });
 
             interaction.editReply(
                 "I saved the image to the database! Go try it out and let it shine c:"

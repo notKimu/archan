@@ -1,7 +1,7 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../../types";
 import { cooldowns } from "../../utils/defaults";
-import { addBadWord } from "../../utils/db/functions";
+import { addBadWord } from "../../db/functions";
 
 const command: SlashCommand = {
     command: new SlashCommandBuilder()
@@ -21,7 +21,7 @@ const command: SlashCommand = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
     execute: async (interaction) => {
         const { guild, options } = interaction;
-        const word: string = options.getString("word");
+        const word: string = options.getString("word")!;
         if (!word) return interaction.reply({ content: "Wohoho, I didn't receive enough parameters to run this command!", ephemeral: true });
 
         await addBadWord(guild.id, word) ? 

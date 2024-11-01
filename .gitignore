@@ -1,6 +1,7 @@
 bot/node_modules
 bot/dist
 bot/pnpm-lock.yaml
+bot/src/commands/dev
 .vscode
 *.env*
 redis/redis.conf

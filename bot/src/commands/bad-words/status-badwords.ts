@@ -1,7 +1,7 @@
 import { PermissionFlagsBits, SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../../types";
 import { cooldowns } from "../../utils/defaults";
-import { getBadWords, getWhitelistedRoles } from "../../utils/db/functions";
+import { getBadWords, getWhitelistedRoles } from "../../db/functions";
 
 const command: SlashCommand = {
     command: new SlashCommandBuilder()

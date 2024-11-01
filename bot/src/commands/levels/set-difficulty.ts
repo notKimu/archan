@@ -3,7 +3,7 @@ import {
   SlashCommandBuilder,
 } from "discord.js";
 import { SlashCommand } from "../../types";
-import { getGuildData, saveGuildData } from "../../utils/db/functions";
+import { getGuildData, saveGuildData } from "../../db/functions";
 import { cooldowns } from "../../utils/defaults";
 
 const command: SlashCommand = {
@@ -25,7 +25,7 @@ const command: SlashCommand = {
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers),
   execute: async (interaction) => {
     const { guild, options } = interaction;
-    const ammount: number = options.getInteger("ammount");
+    const ammount: number = options.getInteger("ammount")!;
     if (ammount === null) return interaction.reply({ content: "Wohoho, I didn't receive enough parameters to run this command!", ephemeral: true });
 
     const guildData = await getGuildData(guild.id);

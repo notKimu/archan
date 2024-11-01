@@ -13,14 +13,13 @@ import {
     saveGuildData,
     saveUserData,
     updateLeaderboard,
-} from "../utils/db/functions";
+} from "../db/functions";
 import { sendToSecureChannel } from "../utils/channels";
 
 const event: BotEvent = {
     name: Events.MessageCreate,
 
     execute: async (message: Message) => {
-        console.log(message);
         const { channel, guild, member, author, content } = message;
 
         if (!guild || author.bot || !member) return;

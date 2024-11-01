@@ -1,8 +1,7 @@
 import { PermissionFlagsBits, Role, SlashCommandBuilder } from "discord.js";
 import { SlashCommand } from "../../types";
 import { cooldowns } from "../../utils/defaults";
-import { removeWhitelistedRole } from "../../utils/db/functions";
-import { isRoleHigherOrEqual } from "../../utils/roles";
+import { removeWhitelistedRole } from "../../db/functions";
 
 const command: SlashCommand = {
     command: new SlashCommandBuilder()
@@ -20,15 +19,15 @@ const command: SlashCommand = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
     execute: async (interaction) => {
         const { guild, member, options } = interaction;
-        const role: Role = options.getRole("role");
+        const role: Role = options.getRole("role")!;
         if (!role) return interaction.reply({ content: "Wohoho, I didn't receive enough parameters to run this command!", ephemeral: true });
     
-        if (isRoleHigherOrEqual(role, guild.members.me.roles.highest.position)) {
+        if (role.position >= guild.members.me!.roles.highest.position) {
           return interaction.reply({
             content: "Hey! I can't manage messages from people with that role! Is higher than mine.",
             ephemeral: true,
           });
-        } else if (isRoleHigherOrEqual(role, member.roles.highest.position)) {
+        } else if (role.position >= member.roles.highest.position) {
           return interaction.reply({
             content:  "Stop right there! You can't manage messages from a role higher or equal to yours :!",
             ephemeral: true,

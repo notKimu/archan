@@ -4,13 +4,16 @@ import {
     SlashCommandBuilder,
 } from "discord.js";
 import { SlashCommand } from "../../types";
-import { createCanvas, loadImage, registerFont } from "canvas";
+import { createCanvas, loadImage } from "canvas";
 import { cooldowns } from "../../utils/defaults";
 
 const canvasHeight = 200;
 const canvasWidth = 593;
 
-registerFont("./assets/fonts/HurmitNerdFont-Regular.otf", { family: "hurmit" });
+// Depending on the system the registerFont function won't do anything
+// so I ended up installing the font on the system and using it that way
+//
+// registerFont("./assets/fonts/HurmitNerdFont-Regular.otf", { family: "hurmit" });
 
 const command: SlashCommand = {
     command: new SlashCommandBuilder()
@@ -18,7 +21,7 @@ const command: SlashCommand = {
         .setDescription("Test the welcome message")
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     execute: async (interaction) => {
-        const { guild, options, member } = interaction;
+        const { member } = interaction;
 
         /**RANK CANVAS */
         const canvas = createCanvas(canvasWidth, canvasHeight);
@@ -46,16 +49,16 @@ const command: SlashCommand = {
 
         
         ctx.fillStyle = "#FFFFFF";
-        ctx.font = "40px hurmit";
+        ctx.font = "40px 'Hurmit Nerd Font'";
         
         // Render welcome message
         ctx.fillText("@Kaskade.sv", 198, 49);
 
-        ctx.font = "30px hurmit";
+        ctx.font = "30px 'Hurmit Nerd Font'";
         // Render name
         ctx.fillText(member.displayName, 198, 154);
         
-        ctx.font = "14px hurmit";
+        ctx.font = "14px 'Hurmit Nerd Font'";
         // Render user ID
         ctx.fillText(member.user.id, 198, 182);
 
@@ -65,7 +68,7 @@ const command: SlashCommand = {
             name: `${member.displayName}_Welcome.png`,
         });
 
-        await interaction.reply({ files: [image] });
+        await interaction.reply({ files: [image], content: "bue" });
     },
 
     cooldown: cooldowns.levelsHeavy,
