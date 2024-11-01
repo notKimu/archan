@@ -2,6 +2,7 @@ bot/node_modules
 bot/dist
 bot/pnpm-lock.yaml
 bot/src/commands/dev
+external/*
 .vscode
 *.env*
 redis/redis.conf
