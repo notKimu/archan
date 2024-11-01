@@ -10,6 +10,8 @@ The `.env` file is located inside the `bot` directory
 ```env
 TOKEN="<DISCORD_TOKEN>"
 CLIENT_ID="<DISCORD_CLIENT_ID>"
+# Optional
+OWNER_ID="504655450655162379"
 
 REDIS_URI="redis://redis:6379"
 REDIS_PASSWORD="<REDIS_PASSWORD>"
